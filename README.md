@@ -6,6 +6,8 @@ VIT Vellore
 
 Model files - https://drive.google.com/file/d/133XZHLd-QsUFQcMiUB8YzgfYtaxMsC29/view?usp=drive_link
 
+dataset & model code - https://colab.research.google.com/drive/1aOsqXat7mSPtemT1rCHweStGPTLVSWro?usp=sharing
+
 📌 Project Overview
 
 This project builds an AI model capable of detecting multiple chest diseases from a single X-ray image.
