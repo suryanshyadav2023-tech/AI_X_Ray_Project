@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🩺 X-Ray Disease Classifier</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 50px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .upload-section {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.8s ease 0.1s both;
+    }
+
+    .upload-section h2 {
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .upload-box {
+      border: 2px dashed #667eea;
+      padding: 40px 30px;
+      background: linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%);
+      border-radius: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .upload-box:hover {
+      border-color: #764ba2;
+      background: linear-gradient(135deg, #ede9ff 0%, #e8deff 100%);
+      transform: translateY(-2px);
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .upload-text {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .upload-text small {
+      color: #999;
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    input[type=file] {
+      display: none;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .file-input-label:hover {
+      background: #764ba2;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    #preview {
+      width: 100%;
+      max-width: 250px;
+      height: auto;
+      margin-top: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      display: none;
+      animation: zoomIn 0.5s ease;
+    }
+
+    button.predict-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 14px 25px;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    button.predict-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+
+    button.predict-btn:active {
+      transform: translateY(0);
+    }
+
+    .loading {
+      display: none;
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading p {
+      color: #666;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .results-section {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .results-section h2 {
+      color: #333;
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #results {
+      display: none;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    #results.show {
+      display: block;
+      animation: slideIn 0.5s ease;
+    }
+
+    .disease {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid #eee;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .disease:hover {
+      background: #f9f9f9;
+      transform: translateX(5px);
+    }
+
+    .disease:last-child {
+      border-bottom: none;
+    }
+
+    .disease-name {
+      font-weight: 500;
+      color: #333;
+      flex: 1;
+      text-align: left;
+    }
+
+    .disease-prob {
+      font-weight: 600;
+      color: #667eea;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    .top-prediction {
+      background: linear-gradient(135deg, #d4fcf0 0%, #c8f7e8 100%);
+      border-left: 4px solid #00b16a;
+      box-shadow: 0 2px 8px rgba(0, 177, 106, 0.1);
+    }
+
+    .top-prediction .disease-name {
+      color: #007d46;
+      font-weight: 700;
+    }
+
+    .top-prediction .disease-prob {
+      color: #007d46;
+      font-weight: 700;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #999;
+      padding: 40px 20px;
+      font-size: 1.1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #999;
+      padding: 60px 20px;
+      font-size: 1.1rem;
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        max-height: 500px;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #667eea;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #764ba2;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .upload-section,
+      .results-section {
+        padding: 30px;
+      }
+
+      .upload-section h2,
+      .results-section h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>🩺 X-Ray Disease Classifier</h1>
+      <p class="subtitle">Advanced AI-powered chest X-ray analysis</p>
+    </header>
+
+    <div class="main-content">
+      <div class="upload-section">
+        <h2>📤 Upload X-Ray</h2>
+        <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">🖼️</div>
+          <p class="upload-text">Click to upload or drag and drop</p>
+          <small>PNG, JPG, GIF up to 10MB</small>
+          <input type="file" id="fileInput" accept="image/*">
+          <label for="fileInput" class="file-input-label">Choose Image</label>
+        </div>
+        <img id="preview" src="" alt="X-Ray Preview">
+        <button class="predict-btn" onclick="uploadImage()">🔍 Analyze X-Ray</button>
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Analyzing X-ray...</p>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <h2>📊 Results</h2>
+        <div id="results" class="results">
+          <div class="empty-state">
+            <div class="empty-state-icon">⏳</div>
+            <p>Upload and analyze an X-ray to see results</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Handle drag and drop
+    const uploadBox = document.querySelector('.upload-box');
+    
+    uploadBox.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadBox.style.borderColor = '#764ba2';
+      uploadBox.style.background = 'linear-gradient(135deg, #ede9ff 0%, #e8deff 100%)';
+    });
+
+    uploadBox.addEventListener('dragleave', () => {
+      uploadBox.style.borderColor = '#667eea';
+      uploadBox.style.background = 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)';
+    });
+
+    uploadBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadBox.style.borderColor = '#667eea';
+      uploadBox.style.background = 'linear-gradient(135deg, #f5f7ff 0%, #f0f4ff 100%)';
+      
+      const files = e.dataTransfer.files;
+      if (files.length) {
+        document.getElementById('fileInput').files = files;
+        showPreview();
+      }
+    });
+
+    document.getElementById('fileInput').addEventListener('change', showPreview);
+
+    function showPreview() {
+      const fileInput = document.getElementById('fileInput');
+      if (fileInput.files.length) {
+        const preview = document.getElementById('preview');
+        preview.src = URL.createObjectURL(fileInput.files[0]);
+        preview.style.display = 'block';
+      }
+    }
+
+    function uploadImage() {
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files.length) {
+        alert('Please select an image first!');
+        return;
+      }
+
+      const file = fileInput.files[0];
+      document.getElementById('loading').style.display = 'block';
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.classList.remove('show');
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/predict', { method: 'POST', body: formData })
+        .then(async (res) => {
+          const text = await res.text();
+          console.log('Raw response:', text);
+          try {
+            return JSON.parse(text);
+          } catch (e) {
+            console.error('JSON parse error:', e);
+            alert('⚠️ Server returned an invalid response.');
+            return {};
+          }
+        })
+        .then((data) => {
+          document.getElementById('loading').style.display = 'none';
+          resultsDiv.innerHTML = '';
+          resultsDiv.classList.add('show');
+
+          if (Object.keys(data).length === 0) {
+            resultsDiv.innerHTML = '<div class="no-results">No predictions returned.</div>';
+            return;
+          }
+
+          const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
+          const top3 = sorted.slice(0, 3).map(([disease]) => disease);
+
+          for (const [disease, prob] of sorted) {
+            const pct = (prob * 100).toFixed(2);
+            const highlight = top3.includes(disease) ? 'top-prediction' : '';
+            resultsDiv.innerHTML += `
+              <div class="disease ${highlight}">
+                <span class="disease-name">${disease}</span>
+                <span class="disease-prob">${pct}%</span>
+              </div>`;
+          }
+        })
+        .catch((err) => {
+          console.error('Fetch error:', err);
+          alert('❌ Error while fetching predictions.');
+          document.getElementById('loading').style.display = 'none';
+        });
+    }
+  </script>
+
+</body>
+</html>
