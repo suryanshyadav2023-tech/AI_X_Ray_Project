@@ -145,3 +145,102 @@ Train on more diverse datasets to reduce bias
 
 This project demonstrates the capability of convolutional neural networks to interpret medical images and support diagnostic decisions.
 DenseNet121 performs efficiently in multi-label classification, and the accompanying web interface makes the system usable for real-world testing and demonstration.
+
+how to run - 
+
+# 📦 **Installation Guide**
+
+Follow the steps below to set up the project environment and install all required dependencies.
+
+---
+
+## 🟣 **1. Clone the Repository**
+
+
+git clone <your-repo-link>
+cd <your-repo-folder>
+
+
+---
+
+## 🟣 **2. Create a Virtual Environment**
+
+It is recommended to install packages inside a virtual environment.
+
+### **Linux / macOS**
+
+
+python3 -m venv venv
+source venv/bin/activate
+
+
+### **Windows**
+
+
+python -m venv venv
+venv\Scripts\activate
+
+
+---
+
+## 🟣 **3. Upgrade pip (Recommended)**
+
+
+pip install --upgrade pip
+
+
+---
+
+## 🟣 **4. Install All Dependencies**
+
+Install every required Python package using the provided `requirements.txt` file:
+
+
+pip install -r requirements.txt
+
+
+This command automatically downloads and installs:
+
+* TensorFlow
+* Keras
+* Flask
+* NumPy
+* Pandas
+* Matplotlib
+* Scikit-learn
+* And all other dependencies listed
+
+---
+
+## 🟣 **5. (Optional) Verify Installation**
+
+You can verify that important modules installed correctly:
+
+
+python -c "import tensorflow as tf; import flask; import numpy as np; print('All good!')"
+
+
+---
+
+## 🟣 **6. Run the Application**
+
+If your app is Flask:
+
+
+python app.py
+
+
+Then open the browser:
+
+
+http://localhost:8080
+
+
+or your configured port.
+
+---
+
+## 🟣 **7. Deactivate the Virtual Environment (When Done)**
+
+
+deactivate
