@@ -136,8 +136,7 @@ Advanced augmentations
 
 Contrastive learning
 
-Expand to detect disease severity
-
+Expand to detect disease severity.
 Train on more diverse datasets to reduce bias
 
 📌 Conclusion
