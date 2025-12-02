@@ -6,7 +6,9 @@ VIT Vellore
 
 Model files - https://drive.google.com/file/d/133XZHLd-QsUFQcMiUB8YzgfYtaxMsC29/view?usp=drive_link
 
-dataset & model code - https://colab.research.google.com/drive/1aOsqXat7mSPtemT1rCHweStGPTLVSWro?usp=sharing
+Dataset & model code - https://colab.research.google.com/drive/1aOsqXat7mSPtemT1rCHweStGPTLVSWro?usp=sharing
+
+Video - https://drive.google.com/file/d/1ZTuJEsLlkcnCiuYtOL0XYuVTccMgWUjk/view?usp=drive_link
 
 📌 Project Overview
 
