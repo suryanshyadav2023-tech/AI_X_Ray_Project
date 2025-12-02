@@ -3,7 +3,9 @@ Deep Learning Model for Multi-Label Medical Image Classification
 
 Author: Suryansh Yadav (23BCE0581)
 VIT Vellore
+
 Model files - https://drive.google.com/file/d/133XZHLd-QsUFQcMiUB8YzgfYtaxMsC29/view?usp=drive_link
+
 📌 Project Overview
 
 This project builds an AI model capable of detecting multiple chest diseases from a single X-ray image.
