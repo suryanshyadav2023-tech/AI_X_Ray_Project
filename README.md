@@ -1,9 +1,7 @@
 🩺 Chest X-Ray Disease Classifier — AI Project
 Deep Learning Model for Multi-Label Medical Image Classification
 
-Author: Suryansh Yadav (23BCE0581)
-VIT Vellore
-
+Author: Suryansh Yadav
 Model files - https://drive.google.com/file/d/133XZHLd-QsUFQcMiUB8YzgfYtaxMsC29/view?usp=drive_link
 
 Dataset & model code - https://colab.research.google.com/drive/1aOsqXat7mSPtemT1rCHweStGPTLVSWro?usp=sharing
